@@ -1,12 +1,14 @@
 package com.ccc.community.controller;
 
+import com.ccc.community.dto.PageDTO;
 import com.ccc.community.mapper.UserMapper;
-import com.ccc.community.model.User;
+import com.ccc.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -19,19 +21,18 @@ import javax.servlet.http.HttpServletRequest;
 public class IndexController {
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private QuestionService questionService;
 
     @GetMapping("/")
-    public String index(HttpServletRequest request){
-        Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("token")){
-                String token = cookie.getValue();
-                User uesr = userMapper.findByToken(token);
-                if (null != uesr){
-                    request.getSession().setAttribute("user" , uesr);
-                }
-                break;
-            }
+    public String index(HttpServletRequest request ,
+                        @RequestParam(value = "page" , defaultValue = "1") Integer page,
+                        @RequestParam(value = "size" , defaultValue = "8") Integer size,
+                        Model model){
+
+        PageDTO pageInfo = questionService.pageInfo(page , size);
+        if (null != pageInfo){
+            model.addAttribute("pageInfo" , pageInfo);
         }
         return "index";
     }
