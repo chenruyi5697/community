@@ -15,11 +15,15 @@ import java.util.List;
 public interface QuestionService {
     PageDTO pageInfo(Integer page , Integer size);
 
-    PageDTO questionList(Integer accountId, Integer page, Integer size);
+    PageDTO questionList(Long accountId, Integer page, Integer size);
 
-    QuestionDTO getById(Integer id);
+    QuestionDTO getById(Long id);
 
     void updateOrInsert(Question question);
 
-    Question selectById(Integer id);
+    Question selectById(Long id);
+
+    void incView(Long id);
+
+    List<QuestionDTO> selectRelated(QuestionDTO questionDTO);
 }

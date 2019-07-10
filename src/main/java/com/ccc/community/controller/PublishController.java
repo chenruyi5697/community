@@ -1,5 +1,6 @@
 package com.ccc.community.controller;
 
+import com.ccc.community.cache.TagCache;
 import com.ccc.community.mapper.QuestionMapper;
 import com.ccc.community.mapper.UserMapper;
 import com.ccc.community.model.Question;
@@ -28,7 +29,9 @@ public class PublishController {
     QuestionService questionService;
 
     @GetMapping("/publish")
-    public String publish(){
+    public String publish(Model model){
+        model.addAttribute("tags", TagCache.get());
+
         return "publish";
     }
 
@@ -37,12 +40,18 @@ public class PublishController {
             @RequestParam("title") String title,
             @RequestParam("description") String description,
             @RequestParam("tag") String tag,
-            @RequestParam("id") Integer id,
+            @RequestParam("id") Long id,
             HttpServletRequest request,
             Model model){
         model.addAttribute("title" , title);
         model.addAttribute("description" , description);
         model.addAttribute("tag" , tag);
+        model.addAttribute("tags", TagCache.get());
+        User user = (User) request.getSession().getAttribute("user");
+        if (null == user){
+            model.addAttribute("msg" , "用户未登录");
+            return "publish";
+        }
         if(null == title || title.equals("")){
             model.addAttribute("msg" , "标题不能为空");
             return "publish";
@@ -53,12 +62,6 @@ public class PublishController {
         }
         if(null == tag || tag.equals("")){
             model.addAttribute("msg" , "标签不能为空");
-            return "publish";
-        }
-
-        User user = (User) request.getSession().getAttribute("user");
-        if (null == user){
-            model.addAttribute("msg" , "用户未登录");
             return "publish";
         }
         Question question = new Question();
@@ -72,13 +75,14 @@ public class PublishController {
     }
 
     @GetMapping("/publish/{id}")
-    public String edit(@PathVariable("id") Integer id,
+    public String edit(@PathVariable("id") Long id,
                        Model model){
         Question question = questionService.selectById(id);
         model.addAttribute("title" , question.getTitle());
         model.addAttribute("description" , question.getDescription());
         model.addAttribute("tag" , question.getTag());
         model.addAttribute("id" , question.getId());
+        model.addAttribute("tags", TagCache.get());
         return "publish";
     }
 

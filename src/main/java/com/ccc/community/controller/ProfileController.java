@@ -3,6 +3,7 @@ package com.ccc.community.controller;
 import com.ccc.community.dto.PageDTO;
 import com.ccc.community.mapper.UserMapper;
 import com.ccc.community.model.User;
+import com.ccc.community.service.NotificationService;
 import com.ccc.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,7 +25,8 @@ import javax.servlet.http.HttpServletRequest;
 public class ProfileController {
     @Autowired
     QuestionService questionService;
-
+    @Autowired
+    NotificationService notificationService;
     @GetMapping("/profile/{action}")
     public String profile(@PathVariable("action") String action ,
                           @RequestParam(value = "page" , defaultValue = "1") Integer page,
@@ -38,12 +40,16 @@ public class ProfileController {
         if ("questions".equals(action)){
             model.addAttribute("section" , action);
             model.addAttribute("sectionName" , "我的提问");
+            PageDTO pageDTO = questionService.questionList(user.getId(), page, size);
+            model.addAttribute("pageInfo" , pageDTO);
         }else if("replies".equals(action)) {
             model.addAttribute("section" , action);
             model.addAttribute("sectionName" , "我的回复");
+            PageDTO pageDTO = notificationService.list(user.getId() , page , size);
+            model.addAttribute("pageInfo" , pageDTO);
+            model.addAttribute("unreadCount" , null);
+
         }
-        PageDTO pageInfo = questionService.questionList(user.getId(), page, size);
-        model.addAttribute("pageInfo" , pageInfo);
         return "profile";
     }
 }

@@ -13,8 +13,8 @@ import java.util.List;
  * @create: 2019 07 05 14:32
  */
 @Data
-public class PageDTO {
-    private List<QuestionDTO> list;
+public class PageDTO<T> {
+    private List<T> data;
     private Integer page;
     private List<Integer> pages = new ArrayList<>();
     private boolean showFirst;

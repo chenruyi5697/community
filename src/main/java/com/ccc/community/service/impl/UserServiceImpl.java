@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
             userMapper.insert(user);
         }else {
             //update
-            User dbUser = dbUsers.get(0);
+            User dbUser = dbUsers.get(dbUsers.size() - 1);
             dbUser.setToken(user.getToken());
             dbUser.setName(user.getName());
             dbUser.setAvatarUrl(user.getAvatarUrl());

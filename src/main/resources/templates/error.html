@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="content-type" content="text/html" charset="UTF-8">
+    <title>error</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css" />
+    <link rel="stylesheet" href="/css/community.css"/>
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+</head>
+<body>
+<div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+    <div class="jumbotron">
+        <h1>出错了</h1>
+        <p th:text="${message}">你访问的页面不存在，请返回或搜索相关内容</p>
+        <p><a class="btn btn-primary btn-lg" th:href="@{/}" role="button">返回主页</a></p>
+    </div>
+</div>
+</body>
+</html>
